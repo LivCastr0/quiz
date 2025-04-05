@@ -100,3 +100,18 @@ def test_choices_have_sequential_ids():
     assert c2.id == 2
     assert c3.id == 3
 
+@pytest.fixture
+def sample_question():
+    q = Question("Qual a capital da França?", points=5, max_selections=2)
+    c1 = q.add_choice("Londres", False)
+    c2 = q.add_choice("Paris", True)
+    c3 = q.add_choice("Berlim", False)
+    return q
+
+def test_select_correct_from_fixture(sample_question):
+    correct_id = [c.id for c in sample_question.choices if c.is_correct][0]
+    selected = sample_question.select_choices([correct_id])
+    assert selected == [correct_id]
+
+def test_fixture_question_has_three_choices(sample_question):
+    assert len(sample_question.choices) == 3
